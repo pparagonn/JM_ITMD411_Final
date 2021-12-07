@@ -143,18 +143,26 @@ public class Dao {
     }
 
     // continue coding for updateRecords implementation
-    public int updateRecords(int id) {
+    public void updateRecords(String id, String oldContent, String newContent) {
         System.out.println("Updating the Records...");
         try {
+            // Begin connection
             statement = getConnection().createStatement();
-            String sql = "UPDATE jmelc_tickets " + "SET ticket_description = NULL WHERE ticket_id = " + id;
-            int count = statement.executeUpdate(sql);
 
-            System.out.println(count + "Record(s) has/have been updated");
+            // Point at which ticket and what needs to get updated
+            String sql = "UPDATE jmelc_tickets " + "SET " + oldContent + " = '" + newContent + "' WHERE ticket_id = " + id;
+            statement.executeUpdate(sql);
+
+            // Report to console which ticket was updated
+            System.out.println("Record #" + id + "was updated");
+
+            // Close connection
+            statement.close();
+            connect.close();
         } catch (SQLException e) {
+            System.out.println("The record could not be opened. Please check that record exists.");
             e.printStackTrace();
         }
-        return id;
     }
 
     // continue coding for deleteRecords implementation
