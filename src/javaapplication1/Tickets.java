@@ -11,6 +11,10 @@ import java.sql.SQLException;
 @SuppressWarnings("serial")
 public class Tickets extends JFrame implements ActionListener {
 
+    // Main menu object items
+    private final JMenu mnuFile = new JMenu("File");
+    private final JMenu mnuAdmin = new JMenu("Admin");
+    private final JMenu mnuTickets = new JMenu("Tickets");
     // class level member objects
     Dao dao = new Dao(); // for CRUD operations
     Boolean chkIfAdmin = null;
@@ -20,10 +24,6 @@ public class Tickets extends JFrame implements ActionListener {
     JMenuItem mnuItemDelete;
     JMenuItem mnuItemOpenTicket;
     JMenuItem mnuItemViewTicket;
-    // Main menu object items
-    private final JMenu mnuFile = new JMenu("File");
-    private final JMenu mnuAdmin = new JMenu("Admin");
-    private final JMenu mnuTickets = new JMenu("Tickets");
 
     public Tickets(Boolean isAdmin) {
 
@@ -167,11 +167,31 @@ public class Tickets extends JFrame implements ActionListener {
                 e1.printStackTrace();
             }
         } else if (e.getSource() == mnuItemUpdate) {
-            // retrieve the ticket information
-            String ticketNumber = JOptionPane.showInputDialog(null, "Enter the ticket ID you want to update");
-            String ticketDesc = JOptionPane.showInputDialog(null, "Add on to ticket description");
-            int number = Integer.parseInt(ticketNumber);
-            dao.updateRecords(number);
+
+            try {
+                // Ask user for the ticket ID that they want to update
+                String ticketnum = JOptionPane.showInputDialog(null, "Enter the ticket ID you want to update");
+
+                // Prompt user what they'd like to update about the ticket
+                String input = (String) JOptionPane.showInputDialog
+                        (null, "What property would you like to update?", "Ticket Update", JOptionPane.QUESTION_MESSAGE,
+                                null, new String[]{"Update Ticket Name"}, "Update Ticket Description");
+
+                // Parse variables to replace information
+                String oldContent;
+                String newContent;
+                if (input.equals("Update Ticket Name")) {
+                    oldContent = "ticket_issuer";
+                    newContent = JOptionPane.showInputDialog(null, "Please provide the new name");
+                } else if (input.equals("Update Ticket Description")) {
+                    oldContent = "ticket_description";
+                    newContent = JOptionPane.showInputDialog(null, "Please enter the new description");
+                } else {
+                    System.out.println("ERROR. Selections are not able to recognized.");
+                }
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         } else if (e.getSource() == mnuItemDelete) {
             String ticketNumber = JOptionPane.showInputDialog(null, "Enter the ticket ID you want to delete");
             int number = Integer.parseInt(ticketNumber);
