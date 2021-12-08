@@ -156,9 +156,9 @@ public class Dao {
             // Report to console which ticket was updated
             System.out.println("Record #" + id + "was updated");
 
-            // Close connection
-            statement.close();
-            connect.close();
+            // Close connection not needed (?)
+            //statement.close();
+            //connect.close();
         } catch (SQLException e) {
             System.out.println("The record could not be opened. Please check that record exists.");
             e.printStackTrace();

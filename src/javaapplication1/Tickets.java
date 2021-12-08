@@ -173,13 +173,13 @@ public class Tickets extends JFrame implements ActionListener {
                 String ticketnum = JOptionPane.showInputDialog(null, "Enter the ticket ID you want to update");
 
                 // Prompt user what they'd like to update about the ticket
+                String[] options = {"Update Ticket Name", "Update Ticket Description"};
                 String input = (String) JOptionPane.showInputDialog
-                        (null, "What property would you like to update?", "Ticket Update", JOptionPane.QUESTION_MESSAGE,
-                                null, new String[]{"Update Ticket Name"}, "Update Ticket Description");
+                        (null, "What property would you like to update?", "Ticket Update", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
                 // Parse variables to replace information
-                String oldContent;
-                String newContent;
+                String oldContent = null;
+                String newContent = null;
                 if (input.equals("Update Ticket Name")) {
                     oldContent = "ticket_issuer";
                     newContent = JOptionPane.showInputDialog(null, "Please provide the new name");
@@ -189,6 +189,12 @@ public class Tickets extends JFrame implements ActionListener {
                 } else {
                     System.out.println("ERROR. Selections are not able to recognized.");
                 }
+
+                // Request update by calling upon updateRecords
+                dao.updateRecords(ticketnum, oldContent, newContent);
+                JOptionPane.showMessageDialog(null, "Ticket # " + ticketnum + " was updated");
+                System.out.println("Ticket # " + ticketnum + " was updated");
+
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
