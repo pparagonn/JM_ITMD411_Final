@@ -24,6 +24,8 @@ public class Tickets extends JFrame implements ActionListener {
     JMenuItem mnuItemDelete;
     JMenuItem mnuItemOpenTicket;
     JMenuItem mnuItemViewTicket;
+    // Sub menu item objects to close ticket
+    JMenuItem mnuItemCloseTicket;
 
     public Tickets(Boolean isAdmin) {
 
@@ -69,20 +71,20 @@ public class Tickets extends JFrame implements ActionListener {
 
         // initialize any more desired sub menu items below
 
+        // NEW ADDITION:
+        // initialize first sub menu item for Tickets main menu
+        mnuItemCloseTicket = new JMenuItem("Close Ticket");
+        // add to Admin Main menu item
+        mnuTickets.add(mnuItemCloseTicket);
+
         /* Add action listeners for each desired menu item *************/
         mnuItemExit.addActionListener(this);
         mnuItemUpdate.addActionListener(this);
         mnuItemDelete.addActionListener(this);
         mnuItemOpenTicket.addActionListener(this);
         mnuItemViewTicket.addActionListener(this);
-
-        /*
-         * continue implementing any other desired sub menu items (like
-         * for update and delete sub menus for example) with similar
-         * syntax & logic as shown above*
-         */
-
-
+        // NEW ADDITION:
+        mnuItemCloseTicket.addActionListener(this);
     }
 
     private void prepareGUIUser() {
@@ -199,9 +201,54 @@ public class Tickets extends JFrame implements ActionListener {
                 e1.printStackTrace();
             }
         } else if (e.getSource() == mnuItemDelete) {
-            String ticketNumber = JOptionPane.showInputDialog(null, "Enter the ticket ID you want to delete");
-            int number = Integer.parseInt(ticketNumber);
-            dao.deleteRecords(number);
+            try {
+                // Ask user for the ticket ID that they want to delete
+                String ticketnum = JOptionPane.showInputDialog(null, "Enter the ticket ID you want to update");
+
+                // identify ticket
+                int input = JOptionPane.showConfirmDialog(null, "Are you sure you'd like to delete ticket #" + ticketnum + "?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (input == JOptionPane.YES_OPTION) {
+                    dao.deleteRecords(ticketnum);
+                    JOptionPane.showMessageDialog(null, "Ticket # " + ticketnum + " was deleted");
+                    System.out.println("The ticket #" + ticketnum + "is deleted");
+                } else if (input == JOptionPane.NO_OPTION) {
+                    System.out.println("Record Not Deleted");
+                } else if (input == JOptionPane.CLOSED_OPTION) {
+                    System.out.println("Nothing Deleted.");
+                }
+                dao.deleteRecords(ticketnum);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        } else if (e.getSource() == mnuItemCloseTicket) {
+            try {
+                // Ask user for the ticket ID that they want to update
+                String ticketnum = JOptionPane.showInputDialog(null, "Enter the ticket ID you want to close");
+                int number = Integer.parseInt(ticketnum);
+
+                String newStatus = null;
+                String open = "OPEN";
+                String closed = "CLOSED";
+
+                // Prompt user what they'd like to update about the ticket
+                String[] options = {"OPEN", "CLOSE"};
+                String input = (String) JOptionPane.showInputDialog
+                        (null, "Would you like to open or close this ticket?", "Ticket Status Change", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+                if (input.equals("OPEN")) {
+                    newStatus = open;
+                } else if (input.equals("CLOSE")) {
+                    newStatus = closed;
+                } else {
+                    System.out.println("ERROR. Selections are not able to recognized.");
+                }
+
+                // Request update by calling upon closeRecords
+                dao.closeRecords(ticketnum, newStatus);
+
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
 
     }

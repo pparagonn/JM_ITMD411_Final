@@ -1,6 +1,5 @@
 package javaapplication1;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -149,7 +148,7 @@ public class Dao {
             // Begin connection
             statement = getConnection().createStatement();
 
-            // Point at which ticket and what needs to get updated
+            // SQL to get updated
             String sql = "UPDATE jmelc_tickets " + "SET " + oldContent + " = '" + newContent + "' WHERE ticket_id = " + id;
             statement.executeUpdate(sql);
 
@@ -166,24 +165,44 @@ public class Dao {
     }
 
     // continue coding for deleteRecords implementation
-    public int deleteRecords(int ticketNum) {
+    public void deleteRecords(String ticketNum) {
         System.out.println("Deleting Records from data...");
         try {
+            // Begin connection
             statement = connect.createStatement();
-            String sql = "DELETE FROM jmelc_tickets " + "WHERE ticket_id = " + ticketNum;
 
-            int input = JOptionPane.showConfirmDialog(null, "Are you sure you'd like to delete ticket #" + ticketNum + "?", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (input == JOptionPane.YES_OPTION) {
-                statement.executeUpdate(sql);
-                System.out.println("The ticket #" + ticketNum + "is deleted");
-            } else if (input == JOptionPane.NO_OPTION) {
-                System.out.println("Record Not Deleted");
-            } else if (input == JOptionPane.CLOSED_OPTION) {
-                System.out.println("Nothing Deleted.");
-            }
+            // SQL: Delete specific ticket from database
+            String sql = "DELETE FROM jmelc_tickets " + "WHERE ticket_id = " + ticketNum;
+            statement.executeUpdate(sql);
+
+            // Report to console which ticket was deleted
+            System.out.println("Record #" + ticketNum + "was updated");
+
         } catch (SQLException e) {
+            System.out.println("Could not delete record.");
             e.printStackTrace();
         }
-        return ticketNum;
+    }
+
+    public void closeRecords(String ticketNum, String newStatus) {
+        System.out.println("Closing the Record...");
+        try {
+            // Begin connection
+            statement = getConnection().createStatement();
+
+            // SQL: Modify status paramater for specific ticket
+            String sql = "UPDATE tickets.jmelc_tickets SET status = '" + newStatus + "' WHERE ticket_id = " + ticketNum;
+            statement.executeUpdate(sql);
+
+            // Report to console which ticket was closed/opened
+            System.out.println("Record #" + ticketNum + "is now set to" + newStatus);
+
+            // Close connection not needed (?)
+            // statement.close();
+            // connect.close();
+        } catch (SQLException e) {
+            System.out.println("The record could not be closed/opened. Please check that record exists.");
+            e.printStackTrace();
+        }
     }
 }
