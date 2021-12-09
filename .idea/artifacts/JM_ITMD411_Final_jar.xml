@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="JM_ITMD411_Final:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/JM_ITMD411_Final_jar</output-path>
+    <root id="archive" name="JM_ITMD411_Final.jar">
+      <element id="module-output" name="JM_ITMD411_Final" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/mysql-connector-java-8.0.23.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
